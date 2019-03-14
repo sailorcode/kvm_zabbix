@@ -14,6 +14,8 @@ def main():
         cpu(options)
     elif options.item == "mem":
         mem(options)
+    elif options.item == "mem_used":
+        mem_used(options)
     elif options.item == "net_out":
         net_out(options)
     elif options.item == "net_in":
@@ -22,6 +24,10 @@ def main():
         rd_bytes(options)
     elif options.item == "wr_bytes":
         wr_bytes(options)
+    elif options.item == "disk_rate":
+        disk_rate(options)
+    elif options.item == "disk_used":
+        disk_used(options)
     elif options.item == "network":
         network(options)
 
@@ -85,6 +91,17 @@ def mem(options):
     print float(util_mem)
 
 
+def mem_used(options):
+    conn = kvm_connect()
+    host = conn.lookupByUUIDString(options.uuid)
+    meminfo = host.memoryStats()
+    free_mem = float(meminfo['unused'])
+    total_mem = float(meminfo['available'])
+    mem_used_num = total_mem - free_mem
+    conn.close()
+    print float(mem_used_num/1024)
+
+
 def net_out(options):
     conn = kvm_connect()
     host = conn.lookupByUUIDString(options.uuid)
@@ -145,6 +162,22 @@ def wr_bytes(options):
     r2 = host.blockStatsFlags("vda")['wr_bytes']
     conn.close()
     print r2 - r1
+
+
+
+def disk_rate(options):
+    conn = kvm_connect()
+    host = conn.lookupByUUIDString(options.uuid)
+    devinfo = host.blockInfo("vda")
+    conn.close()
+    print (float(devinfo[1])/float(devinfo[0]))*100
+
+def disk_used(options):
+    conn = kvm_connect()
+    host = conn.lookupByUUIDString(options.uuid)
+    devinfo = host.blockInfo("vda")
+    conn.close()
+    print float(devinfo[1])/1024/1024
 
 
 def network(options):

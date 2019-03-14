@@ -20,11 +20,14 @@
       kvm.domain.mem_usage[{HOST.NAME}];浮点型 单位'%'
       kvm.domain.rd_bytes[{HOST.NAME}];整数型 单位'bps'
       kvm.domain.wr_bytes[{HOST.NAME}];整数型 单位'bps'
+      kvm.domain.mem_used[{HOST.NAME}];浮点型 单位MB
+      kvm.domain.disk_rate[{HOST.NAME}];浮点型 单位%
+      kvm.domain.disk_used[{HOST.NAME}];浮点型 单位MB
     3 在此模版上添加一个自动发现规则用来发现网卡 key值为kvm.network.discover[{HOST.NAME}]
-    4 在此模版的自动发现规则上添加两个监控项原型 
-      名字 {#VS_NIC} network_in /key值 kvm.domain.net_in[{#VS_NAME},{#VS_NIC}]	
+    4 在此模版的自动发现规则上添加两个监控项原型
+      名字 {#VS_NIC} network_in /key值 kvm.domain.net_in[{#VS_NAME},{#VS_NIC}]
       名字 {#VS_NIC} network_out /key值 kvm.domain.net_out[{#VS_NAME},{#VS_NIC}]
-    5 将此监控模版链接到步骤3创建的自动发现模版上
+    5 将此监控模版链接到步骤3创建的自动发现模版的主机模版上
 #### 4. 启动
     1 将上述已链接过监控模版的自动发现模版配置于一台可以获取到所有虚拟机数据的agent机器上
     2 重启各自agent机器上的zabbix-agent客户端并等待数据刷新
